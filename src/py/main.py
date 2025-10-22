@@ -12,5 +12,6 @@ def main():
     else:
         main_menu.show()
 
+
 if __name__ == "__main__":
     main()
