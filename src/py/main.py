@@ -8,7 +8,9 @@ def main():
         table_creation_arg = sys.argv[1]
         if table_creation_arg == "-c":
             main_menu.create_table()
+        elif table_creation_arg == "-p":
             main_menu.import_panels()
+
     else:
         main_menu.show()
 

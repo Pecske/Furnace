@@ -2,9 +2,6 @@ from entity.EntityBase import EntityBase
 from entity.PanelName import PanelName
 from datetime import datetime
 from typing import Any
-from table.TableBase import TableBase
-from table.PanelTable import PanelTable
-
 
 class Panel(EntityBase):
 
@@ -32,10 +29,8 @@ class Panel(EntityBase):
     def set_value(self, value : float) -> None:
         self.value = value
     
-    def _get_attribute_values(self) -> dict[str, Any]:
-        result : dict[str,Any] = dict()
-        result[TableBase.ID] = self.get_id()
-        result[PanelTable.PANEL_NAME_ID] = self.get_panel_name().get_id()
-        result[PanelTable.TIME] = self.get_time()
-        result[PanelTable.VALUE] = self.get_value()        
-        return result
+    def get_panel_name_id(self) -> int:
+        if self.get_panel_name() is not None:
+            return self.get_panel_name().get_id()
+        else:
+            raise Exception(f"No panel name assigned to this\tPanel ID:{self.get_id()}")

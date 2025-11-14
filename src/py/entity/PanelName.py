@@ -1,7 +1,5 @@
 from typing import Any
 from entity.EntityBase import EntityBase
-from table.TableBase import TableBase
-from table.PanelNameTable import PanelNameTable
 
 class PanelName(EntityBase):
     def __init__(self, name : str | None = None, id: int = 0):
@@ -13,12 +11,6 @@ class PanelName(EntityBase):
     
     def set_name(self,value : str |None) -> None:
         self.name = value
-    
-    def _get_attribute_values(self) -> dict[str, Any]:
-        result : dict[str,Any] = dict()
-        result[TableBase.ID] = self.get_id()
-        result[PanelNameTable.NAME] = self.get_name()        
-        return result
     
     def __eq__(self, value: object) -> bool:
         if type(value) == PanelName:

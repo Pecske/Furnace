@@ -22,6 +22,3 @@ class PanelNameService:
     
     def delete_by_id(self, id : int) -> None:
         self.repo.delete_by_id(id)
-    
-    def get_panel_name_from_cache_by_name(self, name : str) -> PanelName | None:
-        return self.repo.get_entity_from_cache_by_name(name)
