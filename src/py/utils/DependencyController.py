@@ -5,6 +5,8 @@ from repository.PortionRepository import PortionRepository
 from service.PanelService import PanelService
 from service.PanelNameService import PanelNameService
 from service.PortionService import PortionService
+from service.Aggregator import Aggregator
+from controller.AggregatorController import AggregatorController
 from controller.PanelController import PanelController
 from controller.PanelNameController import PanelNameController
 from controller.PortionController import PortionController
@@ -27,6 +29,7 @@ class DependencyController:
             PanelNameController : (self.__get_panel_name_controller, True),
             FileReader : (self.__get_file_reader,False),
             PortionController : (self.__get_portion_controller,True),
+            AggregatorController : (self.__get_aggregator_controller,True)
         }
         pass
 
@@ -88,6 +91,11 @@ class DependencyController:
             self.dependencies[PortionService] = PortionService(self.__get_portion_repo(db_name))
         return self.dependencies[PortionService]
     
+    def __get_aggregator(self, db_name : str) -> Aggregator:
+        if Aggregator not in self.dependencies:
+            self.dependencies[Aggregator] = Aggregator(db_name)
+        return self.dependencies[Aggregator]
+    
     def __get_panel_controller(self,db_name : str) -> PanelController:
         if PanelController not in self.dependencies:
             self.dependencies[PanelController] = PanelController(self.__get_panel_service(db_name),self.__get_panel_name_service(db_name))
@@ -102,6 +110,11 @@ class DependencyController:
         if PortionController not in self.dependencies:
             self.dependencies[PortionController] = PortionController(self.__get_portion_service(db_name))
         return self.dependencies[PortionController]
+    
+    def __get_aggregator_controller(self, db_name: str) -> AggregatorController:
+        if AggregatorController not in self.dependencies:
+            self.dependencies[AggregatorController] = AggregatorController(self.__get_aggregator(db_name))
+        return self.dependencies[AggregatorController]
     
     def __get_file_reader(self) -> FileReader:
         if FileReader not in self.dependencies:

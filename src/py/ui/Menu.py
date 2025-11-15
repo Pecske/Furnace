@@ -3,9 +3,12 @@ import os
 from controller.PanelController import PanelController
 from controller.PanelNameController import PanelNameController
 from controller.PortionController import PortionController
+from controller.AggregatorController import AggregatorController
 from entity.PanelName import PanelName
 from entity.Panel import Panel
 from entity.Portion import Portion
+from dto.PanelCountData import PanelCountData
+from dto.PanelStatisticsData import PanelStatisticsData
 from utils.FileReader import FileReader
 from datetime import datetime
 from dateutil import parser
@@ -36,6 +39,7 @@ class Menu:
         self.panel_controller = self.dependency.build(PanelController, Menu.DB_NAME)
         self.name_controller = self.dependency.build(PanelNameController, Menu.DB_NAME)
         self.portion_controller = self.dependency.build(PortionController, Menu.DB_NAME)
+        self.aggregator = self.dependency.build(AggregatorController, Menu.DB_NAME)
         pass
 
     def __map_panel_from_data(
@@ -120,9 +124,37 @@ class Menu:
             print(saved_portions.get_exceptions())
 
         return saved_portions.get_wrapped()
+    
+    def __print_all_counts(self) -> None:
+        result = self.aggregator.get_distinct_panel_counts()
+        panel_counts = result.get_wrapped()
+        if panel_counts is not None:
+            title_str = "-------Panel Value Counts-------"
+            for panel in panel_counts:
+                print(f"{panel}\n")
+            end_str = str()
+            for c in title_str:
+                end_str += "-"
+            print(end_str)
+        else:
+            print(result.get_exceptions())
+        
+    def __print_panel_stats(self) -> None:
+        result = self.aggregator.get_panel_stats()
+        panel_stats = result.get_wrapped()
+        if panel_stats is not None:
+            title_str = "-------Panel Statistics-------"
+            print(title_str)
+            for panel in panel_stats:                
+                print(f"{panel}\n")
+            end_str = str()
+            for c in title_str:
+                end_str += "-"
+            print(end_str)
+        else:
+            print(result.get_exceptions())
 
     def create_table(self) -> None:
-        # portions = self.filereader.read_from_csv(Menu.ADAG_PATH)
         self.panel_controller.create_table()
         self.portion_controller.create_table()
         print("Table Creation Finished!!!")
@@ -154,4 +186,7 @@ class Menu:
             print("Portion Batch Save Error!!!")
 
     def show(self) -> None:
-        pass
+        self.__print_all_counts()
+        self.__print_panel_stats()
+        
+

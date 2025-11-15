@@ -38,12 +38,13 @@ class SqlExecutor:
         except Exception as e:
             raise Exception(str(e))
     
-    def execute_batch(self, script : str) -> int | None:        
+    def execute_batch(self, script : str) -> list[Any]:        
         try:
-            results : int | None = None
+            results : list[Any] | None = list()
             connection = sql.connect(self.db_name, timeout= 30)
             with connection:
-                executed = connection.executescript(script)                 
+                executed = connection.executescript(script)
+            results = executed.fetchall()                 
             connection.close()
             return results
         except Exception as e:
