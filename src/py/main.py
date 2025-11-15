@@ -5,12 +5,12 @@ from ui.Menu import Menu
 def main():
     main_menu = Menu()
     if len(sys.argv) > 1:
-        table_creation_arg = sys.argv[1]
-        if table_creation_arg == "-c":
+        if "-c" in sys.argv:
             main_menu.create_table()
-        elif table_creation_arg == "-p":
+        if "-p" in sys.argv:
             main_menu.import_panels()
-
+        if "-a" in sys.argv:
+            main_menu.import_portions()
     else:
         main_menu.show()
 

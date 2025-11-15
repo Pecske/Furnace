@@ -2,12 +2,10 @@ import os
 
 from controller.PanelController import PanelController
 from controller.PanelNameController import PanelNameController
-from repository.PanelRepository import PanelRepository
-from repository.PanelNameRepository import PanelNameRepository
-from service.PanelService import PanelService
-from service.PanelNameService import PanelNameService
+from controller.PortionController import PortionController
 from entity.PanelName import PanelName
 from entity.Panel import Panel
+from entity.Portion import Portion
 from utils.FileReader import FileReader
 from datetime import datetime
 from dateutil import parser
@@ -37,6 +35,7 @@ class Menu:
         self.filereader = self.dependency.build(FileReader)
         self.panel_controller = self.dependency.build(PanelController, Menu.DB_NAME)
         self.name_controller = self.dependency.build(PanelNameController, Menu.DB_NAME)
+        self.portion_controller = self.dependency.build(PortionController, Menu.DB_NAME)
         pass
 
     def __map_panel_from_data(
@@ -55,6 +54,14 @@ class Menu:
             panels.append(Panel(panel_names[name_index], time, value))
             name_index += 1
         return panels
+    
+    def __map_portion_from_data(self,data : np.ndarray[tuple[Any,...],np.dtype[Any]]) -> Portion:
+        start : datetime = parser.parse(" ".join((data[1],data[2])))
+        end : datetime = parser.parse(" ".join((data[3],data[4])))
+        time : int = int(data[5])
+        portion_time : int = int(data[6])
+        return Portion(start,end,time,portion_time)
+
 
     def __save_panel_name_batch(self, data: pd.DataFrame) -> list[PanelName] | None:
         column_names = data.axes[1]
@@ -102,10 +109,22 @@ class Menu:
                     print(saved_panels.get_exceptions())
             except Exception as e:
                 print(str(e))
+    
+    def __save_portion_batch(self, data : pd.DataFrame) -> list[Portion] | None:
+        data_numpy = data.to_numpy()
+        portions : list[Portion] = list()
+        for single_data in data_numpy:
+           portions.append(self.__map_portion_from_data(single_data))
+        saved_portions = self.portion_controller.save_batch(Wrapper(portions))
+        if len(saved_portions.get_exceptions()) > 0:
+            print(saved_portions.get_exceptions())
+
+        return saved_portions.get_wrapped()
 
     def create_table(self) -> None:
         # portions = self.filereader.read_from_csv(Menu.ADAG_PATH)
         self.panel_controller.create_table()
+        self.portion_controller.create_table()
         print("Table Creation Finished!!!")
 
     def import_panels(self) -> None:
@@ -123,6 +142,16 @@ class Menu:
             print(f"Import Finished in: {end_time-start_time}!!!")
         else:
             print("Panel Name Save Error!!!")
+    
+    def import_portions(self) -> None:
+        data = self.filereader.read_from_csv(Menu.ADAG_PATH)
+        start_time = time.time()
+        saved_portions = self.__save_portion_batch(data)
+        end_time = time.time()
+        if saved_portions is not None:
+            print(f"Portion import finished without errors is: {end_time-start_time}!!!")
+        else:
+            print("Portion Batch Save Error!!!")
 
     def show(self) -> None:
         pass

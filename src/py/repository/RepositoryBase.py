@@ -44,7 +44,3 @@ class RepositoryBase(Generic[T]):
     @abstractmethod
     def delete_by_id(self,id : int) -> None:
         raise NotImplementedError
-    
-    @abstractmethod
-    def _map_row_to_entity(self, row : tuple[str,...]) -> T:
-        raise NotImplementedError

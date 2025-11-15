@@ -32,7 +32,7 @@ class SqlExecutor:
                    executed = connection.execute(script)
                 else:
                     executed = connection.execute(script,params)
-                    results = executed.lastrowid                      
+                results = executed.lastrowid                      
             connection.close()
             return results
         except Exception as e:
