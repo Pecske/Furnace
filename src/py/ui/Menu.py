@@ -58,14 +58,15 @@ class Menu:
             panels.append(Panel(panel_names[name_index], time, value))
             name_index += 1
         return panels
-    
-    def __map_portion_from_data(self,data : np.ndarray[tuple[Any,...],np.dtype[Any]]) -> Portion:
-        start : datetime = parser.parse(" ".join((data[1],data[2])))
-        end : datetime = parser.parse(" ".join((data[3],data[4])))
-        time : int = int(data[5])
-        portion_time : int = int(data[6])
-        return Portion(start,end,time,portion_time)
 
+    def __map_portion_from_data(
+        self, data: np.ndarray[tuple[Any, ...], np.dtype[Any]]
+    ) -> Portion:
+        start: datetime = parser.parse(" ".join((data[1], data[2])))
+        end: datetime = parser.parse(" ".join((data[3], data[4])))
+        time: int = int(data[5])
+        portion_time: int = int(data[6])
+        return Portion(start, end, time, portion_time)
 
     def __save_panel_name_batch(self, data: pd.DataFrame) -> list[PanelName] | None:
         column_names = data.axes[1]
@@ -113,18 +114,18 @@ class Menu:
                     print(saved_panels.get_exceptions())
             except Exception as e:
                 print(str(e))
-    
-    def __save_portion_batch(self, data : pd.DataFrame) -> list[Portion] | None:
+
+    def __save_portion_batch(self, data: pd.DataFrame) -> list[Portion] | None:
         data_numpy = data.to_numpy()
-        portions : list[Portion] = list()
+        portions: list[Portion] = list()
         for single_data in data_numpy:
-           portions.append(self.__map_portion_from_data(single_data))
+            portions.append(self.__map_portion_from_data(single_data))
         saved_portions = self.portion_controller.save_batch(Wrapper(portions))
         if len(saved_portions.get_exceptions()) > 0:
             print(saved_portions.get_exceptions())
 
         return saved_portions.get_wrapped()
-    
+
     def __print_all_counts(self) -> None:
         result = self.aggregator.get_distinct_panel_counts()
         panel_counts = result.get_wrapped()
@@ -138,14 +139,14 @@ class Menu:
             print(end_str)
         else:
             print(result.get_exceptions())
-        
+
     def __print_panel_stats(self) -> None:
         result = self.aggregator.get_panel_stats()
         panel_stats = result.get_wrapped()
         if panel_stats is not None:
             title_str = "-------Panel Statistics-------"
             print(title_str)
-            for panel in panel_stats:                
+            for panel in panel_stats:
                 print(f"{panel}\n")
             end_str = str()
             for c in title_str:
@@ -171,22 +172,17 @@ class Menu:
             start_time = time.time()
             self.__save_panel_batch(saved_names, data)
             end_time = time.time()
-            print(f"Import Finished in: {end_time-start_time}!!!")
+            print(f"Panel Import Finished in: {end_time-start_time}!!!")
         else:
             print("Panel Name Save Error!!!")
-    
+
     def import_portions(self) -> None:
         data = self.filereader.read_from_csv(Menu.ADAG_PATH)
         start_time = time.time()
         saved_portions = self.__save_portion_batch(data)
         end_time = time.time()
-        if saved_portions is not None:
-            print(f"Portion import finished without errors is: {end_time-start_time}!!!")
-        else:
-            print("Portion Batch Save Error!!!")
+        print(f"Portion import finished without errors in: {end_time-start_time}!!!")
 
     def show(self) -> None:
         self.__print_all_counts()
         self.__print_panel_stats()
-        
-

@@ -1,5 +1,7 @@
 class PanelStatisticsData:
-    def __init__(self, name : str, min : float = 0,max : float = 0, avg : float = 0) -> None:
+    def __init__(
+        self, name: str, min: float = 0, max: float = 0, avg: float = 0
+    ) -> None:
         self.name = name
         self.min = min
         self.max = max
@@ -8,29 +10,29 @@ class PanelStatisticsData:
 
     def get_name(self) -> str:
         return self.name
-    
-    def set_name(self, value : str) -> None:
+
+    def set_name(self, value: str) -> None:
         self.name = value
         pass
 
     def get_min(self) -> float:
         return self.min
-    
-    def set_min(self, value : float) -> None:
+
+    def set_min(self, value: float) -> None:
         self.min = value
         pass
 
     def get_max(self) -> float:
         return self.max
-    
-    def set_max(self, value : float) -> None:
+
+    def set_max(self, value: float) -> None:
         self.max = value
         pass
 
     def get_avg(self) -> float:
         return self.avg
-    
-    def set_avg(self, value : float) -> None:
+
+    def set_avg(self, value: float) -> None:
         self.avg = value
         pass
 

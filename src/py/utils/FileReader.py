@@ -11,5 +11,7 @@ class FileReader:
         try:
             df: pd.DataFrame = pd.read_csv(path, delimiter=self.DELIMITER)
         except Exception as e:
-            df: pd.DataFrame = pd.read_csv(path, delimiter=self.DELIMITER, encoding="windows-1252")
+            df: pd.DataFrame = pd.read_csv(
+                path, delimiter=self.DELIMITER, encoding="windows-1252"
+            )
         return df.dropna()
