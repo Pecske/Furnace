@@ -46,4 +46,10 @@ class SQLMapper:
 
     @staticmethod
     def map_row_to_panel_statistics(row: tuple[str, ...]) -> PanelStatisticsData:
-        return PanelStatisticsData(row[0], float(row[1]), float(row[2]), float(row[3]))
+        return PanelStatisticsData(
+            row[1],
+            min=float(row[2]),
+            max=float(row[3]),
+            avg=float(row[4]),
+            id=int(row[0]),
+        )

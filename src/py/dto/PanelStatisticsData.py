@@ -1,11 +1,12 @@
 class PanelStatisticsData:
     def __init__(
-        self, name: str, min: float = 0, max: float = 0, avg: float = 0
+        self, name: str, min: float = 0, max: float = 0, avg: float = 0, id: int = 0
     ) -> None:
         self.name = name
         self.min = min
         self.max = max
         self.avg = avg
+        self.id = id
         pass
 
     def get_name(self) -> str:
@@ -34,6 +35,13 @@ class PanelStatisticsData:
 
     def set_avg(self, value: float) -> None:
         self.avg = value
+        pass
+
+    def get_id(self) -> int:
+        return self.id
+
+    def set_id(self, value: int) -> None:
+        self.id = value
         pass
 
     def __str__(self) -> str:
